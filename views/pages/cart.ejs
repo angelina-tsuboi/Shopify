@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Shopping</title>
     <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/cart.css">
     <%- include('../partials/importCSS.ejs') %>
   </head>
   <body>
@@ -15,20 +16,11 @@
     </nav>
 
     <div class="px-4 px-lg-0">
-        <!-- For demo purpose -->
-        <div class="container text-white py-5 text-center">
-          <h1 class="display-4">Bootstrap 4 shopping cart</h1>
-          <p class="lead mb-0">Build a fully structred shopping cart page using Bootstrap 4. </p>
-          <p class="lead">Snippet by <a href="https://bootstrapious.com/snippets" class="text-white font-italic">
-                  <u>Bootstrapious</u></a>
-          </p>
-        </div>
-        <!-- End -->
       
         <div class="pb-5">
           <div class="container">
             <div class="row">
-              <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+              <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5" id="shoppingTable">
       
                 <!-- Shopping cart table -->
                 <div class="table-responsive">
@@ -50,46 +42,21 @@
                       </tr>
                     </thead>
                     <tbody>
+                      <% productResult.forEach((product)=> { %>
                       <tr>
                         <th scope="row" class="border-0">
                           <div class="p-2">
-                            <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
-                            <div class="ml-3 d-inline-block align-middle">
-                              <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">Timex Unisex Originals</a></h5><span class="text-muted font-weight-normal font-italic d-block">Category: Watches</span>
+                            <img src=<%= product.image %> alt="" width="70" class="img-fluid rounded shadow-sm">
+                            <div class="ml-3 d-inline-block align-middle" id="productInfoStore">
+                              <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle"><%= product.name %></a></h5><span class="text-muted font-weight-normal font-italic d-block" id="productId"><%= product._id %></span>
                             </div>
                           </div>
                         </th>
-                        <td class="border-0 align-middle"><strong>$79.00</strong></td>
-                        <td class="border-0 align-middle"><strong>3</strong></td>
-                        <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                        <td class="border-0 align-middle"><strong><%= product.price %></strong></td>
+                        <td class="border-0 align-middle"><strong>1</strong></td>
+                        <td class="border-0 align-middle"><a href="#" class="text-dark removeButton"><i class="fa fa-trash"></i></a></td>
                       </tr>
-                      <tr>
-                        <th scope="row">
-                          <div class="p-2">
-                            <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-3_cexmhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
-                            <div class="ml-3 d-inline-block align-middle">
-                              <h5 class="mb-0"><a href="#" class="text-dark d-inline-block">Lumix camera lense</a></h5><span class="text-muted font-weight-normal font-italic">Category: Electronics</span>
-                            </div>
-                          </div>
-                        </th>
-                        <td class="align-middle"><strong>$79.00</strong></td>
-                        <td class="align-middle"><strong>3</strong></td>
-                        <td class="align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">
-                          <div class="p-2">
-                            <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-2_qxjis2.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
-                            <div class="ml-3 d-inline-block align-middle">
-                              <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block">Gray Nike running shoe</a></h5><span class="text-muted font-weight-normal font-italic">Category: Fashion</span>
-                            </div>
-                          </div>
-                          <td class="align-middle"><strong>$79.00</strong></td>
-                          <td class="align-middle"><strong>3</strong></td>
-                          <td class="align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a>
-                          </td>
-                      </tr>
+                      <% }); %>
                     </tbody>
                   </table>
                 </div>
@@ -136,5 +103,6 @@
       </div>
 
     <%- include('../partials/importJS.ejs') %>
+    <script src="/cart.js"></script>
   </body>
 </html>

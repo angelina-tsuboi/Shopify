@@ -10,7 +10,11 @@ let Product = mongoose.model("Product", {
         required: true
     },
     price: {
-        type: Number,
+        type: String,
+        required: true
+    },
+    pickUpName: {
+        type: String,
         required: true
     }
 })
