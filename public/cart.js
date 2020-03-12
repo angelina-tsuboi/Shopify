@@ -4,4 +4,5 @@ $(".removeButton").click(function(){
     }, success: function(result){
         console.log(`I am a result ${JSON.stringify(result.response, undefined, 2)}`);
     }});
+    location.reload()
 })

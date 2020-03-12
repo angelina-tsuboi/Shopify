@@ -15,7 +15,7 @@ $('.add-to-cart').click(function(e){
     }, success: function(result){
         console.log(`I am a result ${JSON.stringify(result.response, undefined, 2)}`);
     }});
-    window.location.href = `/cart?pickUpName=${sessionStorage.getItem('pickUpName')}`
+    alert("Order has been made!")
 })
 
 
