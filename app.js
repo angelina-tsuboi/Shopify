@@ -5,9 +5,15 @@ var bodyParser = require('body-parser');
 const path = require('path')
 const port = 6754 || process.env.PORT;
 const app = express()
+var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+
 var {mongoose} = require('./db/mongoose');
 mongoose.connect('mongodb://localhost:27017/Shopify', {useNewUrlParser: true});
 var {Product} = require('./models/product')
+var {User} = require('./models/user');
+var {CustomerInfo} = require('./models/customerinfo');
+var {ProductInfo} = require('./models/productinfo');
 
 app.use(express.static('public'))
 app.set('view engine', 'ejs');
@@ -18,6 +24,10 @@ app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
     res.render('pages/index')
+})
+
+app.get('/signup', (req, res) => {
+    res.render('pages/signup')
 })
 
 app.get('/cart', async(req, res) => {
