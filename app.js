@@ -97,6 +97,78 @@ app.post('/removeOrder', (req, res) => {
     }
 })
 
+app.post('/loginUser', async (req, res) => {
+    try{
+        console.log("Got the data " + req.body.email)
+        let firstName = req.body.first_name;
+        let lastName = req.body.last_name;
+        let email = req.body.email;
+        let password = req.body.password;
+        let ccNum = req.body.cc_number;
+        let cvcNum = req.body.cvc_number;
+        let expirDate = req.body.expirationDate;
+        let newUser = new User({
+            name: `${firstName} ${lastName}`,
+            email: email,
+            ccNumber: ccNum,
+            cvcNumber: cvcNum,
+            expirationDate: expirDate
+        })
+        let result = await newUser.save();
+
+        console.log("Saved user successfully!" + result);
+    }catch(err){
+        console.log("Error saving new user: " + err)
+    }
+})
+
+app.post('/charge', async(req,res) => {
+    
+    try {
+        const customer = await stripe.customers.create({
+            email: "angelina.t1832@gmail.com",
+            source: req.body.stripeToken
+        })
+        
+        const charge = await stripe.charges.create({
+            amount: 100,
+            description: "",
+            currency: 'usd',
+            customer: customer.id
+        })
+    
+        console.log(req.body)
+    
+        let customerRecord = {
+            name:req.body.stripeBillingName,
+            email: req.body.stripeEmail,
+            country: 
+            req.body.stripeBillingAddressCountry,
+            countryCode: req.body.stripeBillingAddressCountryCode,
+            zip: req.body.stripeBillingAddressZip,
+            address: req.body.stripeBillingAddressLine1,
+            addressCity: req.body.stripeBillingAddressCity,
+            addressState: req.body.stripeBillingAddressState
+        }
+    
+        let productRecord = {
+            productId:req.body.productId,
+            token: req.body.stripeToken,
+            tokenType: req.body.stripeTokenType,
+        }
+    
+        let newCustomerInfo = new CustomerInfo(customerRecord)
+        let newProductRecord = new ProductInfo(productRecord)
+        const customerResult = await newCustomerInfo.save();
+        const productResult = await newProductRecord.save();
+        console.log(customerResult)
+        console.log(productResult)
+        res.status(200).send({cresult: customerResult, presult: productResult});
+    } catch (error) {
+        res.status(400).send({e: error});
+    } 
+})
+
 app.listen(port, (err) => {
     err ? console.log(err) : console.log("Port is up on " + port)
 })
