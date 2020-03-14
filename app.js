@@ -15,6 +15,9 @@ var {User} = require('./models/user');
 var {CustomerInfo} = require('./models/customerinfo');
 var {ProductInfo} = require('./models/productinfo');
 
+let chargeAmount = 0;
+let chargeDescription = "";
+
 app.use(express.static('public'))
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -36,7 +39,11 @@ app.get('/cart', async(req, res) => {
     try{
         productResult = await Product.find({pickUpName: pickUpName});
         console.log(`Product Result is ${productResult}`);
+        productResult.forEach((product) => {
+            chargeDescription += ` ${product.name}`;
+        })
         calculatedResults = calculateOrder(productResult);
+        chargeAmount = calculatedResults[3];
         res.render('pages/cart', {pickUpName, calculatedResults})
     }catch(err){
         console.log("Failed to load orders data: " + err)
@@ -131,8 +138,8 @@ app.post('/charge', async(req,res) => {
         })
         
         const charge = await stripe.charges.create({
-            amount: 100,
-            description: "",
+            amount: chargeAmount * 100,
+            description: chargeDescription,
             currency: 'usd',
             customer: customer.id
         })
