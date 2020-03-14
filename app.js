@@ -17,6 +17,7 @@ var {ProductInfo} = require('./models/productinfo');
 
 let chargeAmount = 0;
 let chargeDescription = "";
+let userPickUpName = "";
 
 app.use(express.static('public'))
 app.set('view engine', 'ejs');
@@ -35,6 +36,7 @@ app.get('/signup', (req, res) => {
 
 app.get('/cart', async(req, res) => {
     let pickUpName = req.query.pickUpName;
+    userPickUpName = req.query.pickUpName;
     console.log("pickUpName: get" +  pickUpName)
     try{
         productResult = await Product.find({pickUpName: pickUpName});
@@ -67,6 +69,7 @@ app.get('/cart', async(req, res) => {
 
 app.post('/cart', async(req, res) => {
     let pickUpName = req.body.pickUpName;
+    userPickUpName = req.body.pickUpName;
     console.log("pickUpName: post " +  pickUpName)
     try{
         productResult = await Product.find({pickUpName: pickUpName});
@@ -170,11 +173,22 @@ app.post('/charge', async(req,res) => {
         const productResult = await newProductRecord.save();
         console.log(customerResult)
         console.log(productResult)
-        res.status(200).send({cresult: customerResult, presult: productResult});
+        deleteUserProducts();
+        res.status(200).render('pages/index');
     } catch (error) {
         res.status(400).send({e: error});
     } 
 })
+
+function deleteUserProducts(){
+    try{
+        Product.deleteMany({pickUpName: `${userPickUpName}` }).then(()=> {
+            console.log("Deleted User Products")
+        })
+    }catch(err){
+        console.log("Error deleting user products")
+    }
+}
 
 app.listen(port, (err) => {
     err ? console.log(err) : console.log("Port is up on " + port)
